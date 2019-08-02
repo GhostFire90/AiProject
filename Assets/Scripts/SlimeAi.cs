@@ -27,9 +27,15 @@ public class SlimeAi : Ai
     float starveTime = 0;
     public Transform intruder;
     bool Destroyed;
+    float closestTime = 0;
+    float closestDelay = 5;
     void Idle()
     {
-        //Transform intruder = 
+        closestTime += Time.deltaTime;
+        if(closestTime >= closestDelay)
+        {
+            closest();
+        }
         deathTime += Time.deltaTime;
         Vector3 angle = new Vector3(Random.Range(-jumpRange, jumpRange), 0 , Random.Range(-jumpRange, jumpRange));
         if (OnGround())
@@ -52,12 +58,12 @@ public class SlimeAi : Ai
             
             
         }
-        else if(transform.localScale.x >= 101 && GameObject.FindGameObjectsWithTag("Slime").Length <= 250)
+        else if(transform.localScale.x >= 101 && GameObject.FindGameObjectsWithTag("Slime").Length <= 100)
         {
             currentState = Split;
             Debug.Log("Split");
         }
-        else if (transform.localScale.x >= 101 && GameObject.FindGameObjectsWithTag("Slime").Length > 250)
+        else if (transform.localScale.x >= 101 && GameObject.FindGameObjectsWithTag("Slime").Length > 100)
         {
             currentState = Max;
             Debug.Log("Max");
@@ -74,12 +80,17 @@ public class SlimeAi : Ai
             Debug.Log("Aggro");
             
         }
+        else if (hungeryTime <= hungeryDelay / 2)
+        {
+            currentState = Search;
+        }
         else
         {
             currentState = Idle;
             
         }
     }
+    
     void Split()
     {
         
@@ -118,30 +129,29 @@ public class SlimeAi : Ai
         }
         
     }
+    void Search()
+    {
+        
+        jumpTime += Time.deltaTime;
+        if (OnGround())
+        {
+            if (jumpTime >= jumpDelay)
+            {
+                Vector3 d = transform.position - food.position;
+                float r = Mathf.Atan2(d.z, -d.x);
+                Vector3 angle = Quaternion.Euler(0, r * Mathf.Rad2Deg, 0) * new Vector3(0, 0, -jumpRange);
+                jumpTime -= jumpDelay;
+                Jump(angle);
+            }
+        }
+        if (Physics.Raycast(new Ray(transform.position, food.position - transform.position), out hit, 3))
+        {
+            currentState = Idle;
+        }
+    }
     void Hungry()
     {
-        foreach (GameObject l in GameObject.FindGameObjectsWithTag("Food"))
-        {
-            foodLoc.Add(l.transform);
-        }
-        Transform a = null;
-        foreach (Transform b in foodLoc)
-        {
-            
-            if (a != null)
-            {
-                if (Vector3.Distance(b.position, transform.position) < Vector3.Distance(a.position, transform.position))
-                {
-                    a = b;
-                }
-                
-            }
-            else
-            {
-                a = b;
-            }
-        }
-        food = a;
+        
         jumpTime += Time.deltaTime;
         if (OnGround())
         {
@@ -166,12 +176,38 @@ public class SlimeAi : Ai
             {
                 transform.localScale += new Vector3(.3f, .3f, .3f);
                 currentState = Idle;
+                starveTime -= starveDelay;
                 if(food.GetComponent<TerrId>().terrId != CLAN)
                 {
                     food.GetComponent<TerrId>().terrId = CLAN;
                 }
             }
         }
+    }
+    void closest()
+    {
+        foreach (GameObject l in GameObject.FindGameObjectsWithTag("Food"))
+        {
+            foodLoc.Add(l.transform);
+        }
+        Transform a = null;
+        foreach (Transform b in foodLoc)
+        {
+
+            if (a != null && a.GetComponent<TerrId>().terrId != CLAN) 
+            {
+                if (Vector3.Distance(b.position, transform.position) < Vector3.Distance(a.position, transform.position))
+                {
+                    a = b;
+                }
+
+            }
+            else
+            {
+                a = b;
+            }
+        }
+        food = a;
     }
     public void Death()
     {
@@ -223,6 +259,7 @@ public class SlimeAi : Ai
         currentState = Idle;
         
         
+        
     }
     private void OnDrawGizmos()
     {
@@ -262,4 +299,5 @@ public class SlimeAi : Ai
     {
         Destroyed = true;
     }
+    
 }

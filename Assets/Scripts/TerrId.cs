@@ -27,7 +27,7 @@ public class TerrId : MonoBehaviour
                 {
                     if (b.GetComponent<SlimeAi>().CLAN != terrId)
                     {
-                        //owners.Remove(b);
+                        owners.Remove(b);
                         continue;
                     }
                     b.GetComponent<SlimeAi>().intruder = intruder1;
@@ -42,7 +42,21 @@ public class TerrId : MonoBehaviour
 
             }
         }
-        
+        Color color;
+        if (terrId == 1)
+        {
+            color = Color.red;
+        }
+        else if (terrId == 2)
+        {
+            color = Color.blue;
+        }
+        else
+        {
+            color = Color.gray;
+        }
+        GetComponent<MeshRenderer>().material.color = color;
+
     }
         private void OnDrawGizmos()
         {

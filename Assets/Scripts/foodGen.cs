@@ -15,7 +15,7 @@ public class foodGen : MonoBehaviour
         float minZ = gameObject.transform.position.z - gameObject.transform.localScale.z * bounds.size.z * 0.5f;
 
         
-        for (int x = 100; x >= 0; --x)
+        for (int x = 75; x >= 0; --x)
         {
             Vector3 newVec = new Vector3(Random.Range(minX, -minX),
                                      gameObject.transform.position.y + 1,

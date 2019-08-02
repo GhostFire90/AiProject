@@ -20,7 +20,7 @@ ScriptsOnlyBuild:
     - UnityEngine.UI.GraphicRaycaster
     - UnityEngine.UI.Text
   sceneClasses:
-    Assets/Scenes/SampleScene.unity:
+    Assets/Scenes/Main.unity:
     - Class: 1
       Script: {instanceID: 0}
     - Class: 4
@@ -616,7 +616,7 @@ ScriptsOnlyBuild:
     className: SlimeAi
   - hash:
       serializedVersion: 2
-      Hash: 639f44f477143152db441f141f87bcf3
+      Hash: 514a33aca8b398250588c13e6ee2e321
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: TerrId
@@ -754,5 +754,5 @@ ScriptsOnlyBuild:
     className: PlayableTrack
   platform: 19
   scenePathNames:
-  - Assets/Scenes/SampleScene.unity
+  - Assets/Scenes/Main.unity
   playerPath: C:/Users/evan.anderson/Desktop/Built Slime/AiProject.exe
