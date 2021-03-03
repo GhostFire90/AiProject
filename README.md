@@ -1,2 +1,2 @@
 # AiProject
-Acexual slime simulation, run medium res, have fun
+Asexual slime simulation, run medium res, have fun
